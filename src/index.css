@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── 국기 이모지 폰트 (모바일/PC 동일 렌더링) ── */
+.flag-emoji {
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Twemoji Mozilla', 'Android Emoji', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1;
+  display: inline-block;
+}
+
+/* ── 다크/라이트 테마 CSS 변수 ── */
+:root {
+  /* 다크 (기본) */
+  --bg-primary:    #020617; /* slate-950 */
+  --bg-secondary:  #0f172a; /* slate-900 */
+  --bg-card:       #1e293b; /* slate-800 */
+  --bg-card-hover: #334155; /* slate-700 */
+  --border:        #334155; /* slate-700 */
+  --border-light:  #1e293b; /* slate-800 */
+  --text-primary:  #f1f5f9; /* slate-100 */
+  --text-secondary:#94a3b8; /* slate-400 */
+  --text-muted:    #64748b; /* slate-500 */
+  --text-dimmer:   #475569; /* slate-600 */
+  --sidebar-bg:    #0f172a;
+  --ticker-bg:     rgba(2,6,23,0.95);
+  --war-banner-from: #450a0a; /* red-950 */
+  --war-banner-to:   rgba(127,29,29,0.8); /* red-900/80 */
+  --radius: 0.5rem;
+}
+
+html.light {
+  --bg-primary:    #f8fafc; /* slate-50 */
+  --bg-secondary:  #f1f5f9; /* slate-100 */
+  --bg-card:       #e2e8f0; /* slate-200 */
+  --bg-card-hover: #cbd5e1; /* slate-300 */
+  --border:        #cbd5e1; /* slate-300 */
+  --border-light:  #e2e8f0; /* slate-200 */
+  --text-primary:  #0f172a; /* slate-900 */
+  --text-secondary:#475569; /* slate-600 */
+  --text-muted:    #64748b; /* slate-500 */
+  --text-dimmer:   #94a3b8; /* slate-400 */
+  --sidebar-bg:    #f1f5f9;
+  --ticker-bg:     rgba(248,250,252,0.95);
+  --war-banner-from: #fef2f2; /* red-50 */
+  --war-banner-to:   rgba(254,226,226,0.8); /* red-100/80 */
+}
+
+@layer base {
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%
+  }
+}
+
+
+
+
+
+img {
+  object-position: top;
+}
+
+.fixed {
+  position: fixed;
+}

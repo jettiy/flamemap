@@ -1,0 +1,763 @@
+{
+  "updatedAt": "2026-03-22T09:24:00+08:00",
+  "updatedAtKST": "2026년 3월 22일 09:24 KST",
+  "warDay": 23,
+  "warStartDate": "2026-02-28",
+  "warSummary": "개전 23일차. 트럼프, 이란에 48시간 내 호르무즈 해협 개방 요구 또는 발전소 폭격 경고. 네타냐후 '전쟁이 예상보다 빨리 끝날 것' 시사, 유가 소폭 하락. 미국, 제재 이란산 원유 1억4천만 배럴 한시 해제. 모자바 하메네이 최고지도자 행방불명 지속.",
+  "marketPrices": {
+    "brent": {
+      "price": 112.19,
+      "change": 3.54,
+      "unit": "USD/배럴",
+      "nameKo": "브렌트유",
+      "source": "live",
+      "note": "OilPrice.com 3/20 종가 기준 (장중 $119 돌파 후 하락)"
+    },
+    "wti": {
+      "price": 98.23,
+      "change": 2.18,
+      "unit": "USD/배럴",
+      "nameKo": "WTI 원유",
+      "source": "live",
+      "note": "TradingEconomics 3/20 종가 기준, 전월比 +48.1%"
+    },
+    "naturalGas": {
+      "price": 3.095,
+      "change": -0.07,
+      "unit": "USD/MMBtu",
+      "nameKo": "천연가스(헨리허브)",
+      "source": "live",
+      "note": "CME Henry Hub 3/20 기준 (TTF 유럽 천연가스는 급등세 지속)"
+    }
+  },
+  "countryPrices": {
+    "KR": {
+      "gasoline": {
+        "value": 1819.84,
+        "unit": "원/L",
+        "source": "한국석유공사 오피넷",
+        "date": "2026-03-22",
+        "note": "전국 주유소 평균, 최고가제 시행 후 소폭 하락 전환"
+      }
+    },
+    "US": {
+      "gasoline": {
+        "value": 0.9828,
+        "unit": "USD/L",
+        "source": "EIA",
+        "date": "2026-03-16",
+        "note": "$3.720/갤런 (EIA 3/16 기준, 전주比 +$0.218)"
+      }
+    },
+    "JP": {
+      "gasoline": {
+        "value": 190.8,
+        "unit": "엔/L",
+        "source": "석유정보센터 / METI",
+        "date": "2026-03-18",
+        "note": "사상 최고치 기록, 정부 보조금 재가동"
+      }
+    },
+    "CN": {
+      "gasoline": {
+        "value": 8.88,
+        "unit": "위안/L",
+        "source": "NDRC",
+        "date": "2026-03-10",
+        "note": "92호 휘발유, 3/10 NDRC 조정 후 가격 (리터당 +0.53위안). 3/23 추가 인상 예고(9위안대 진입 예상)"
+      }
+    },
+    "EU": {
+      "gasoline": {
+        "value": 1.711,
+        "unit": "EUR/L",
+        "source": "fuel-prices.eu / EU 집행위",
+        "date": "2026-03-16",
+        "note": "EU 27개국 평균, 3/9(€1.648) 대비 상승 지속"
+      }
+    }
+  },
+  "trumpPosts": [
+    {
+      "text": "If Iran doesn't FULLY OPEN, WITHOUT THREAT, the Strait of Hormuz, within 48 HOURS from this exact point in time, the United States of America will hit and obliterate their various POWER PLANTS, STARTING WITH THE BIGGEST ONE FIRST! Thank you for your attention to this matter.",
+      "summary": "이란에 48시간 내 호르무즈 해협 전면 개방 요구, 불응 시 발전소부터 폭격 경고.",
+      "date": "2026-03-21",
+      "url": "https://truthsocial.com/@realDonaldTrump"
+    },
+    {
+      "text": "We are getting very close to meeting our objectives as we consider winding down our great Military efforts in the Middle East with respect to the Terrorist Regime of Iran. The Hormuz Strait will have to be guarded and policed, as necessary, by other Nations who use it - The United States does not!",
+      "summary": "군사 목표 달성 임박, 이란전 단계적 종료 검토. 호르무즈는 사용국이 직접 지켜야.",
+      "date": "2026-03-20",
+      "url": "https://truthsocial.com/@realDonaldTrump"
+    },
+    {
+      "text": "NO MORE ATTACKS WILL BE MADE BY ISRAEL pertaining to this extremely important and valuable South Pars Field unless Iran unwisely decides to attack a very innocent, in this case, Qatar - In which instance the United States of America, with or without the help or consent of Israel, will massively blow up the entirety of the South Pars Gas Field.",
+      "summary": "이란이 카타르를 공격하면, 미국이 사우스파르스 가스전을 전면 파괴하겠다고 경고.",
+      "date": "2026-03-18",
+      "url": "https://truthsocial.com/@realDonaldTrump/posts/116253388303392718"
+    },
+    {
+      "text": "Israel, out of anger for what has taken place in the Middle East, has violently lashed out at a major facility known as South Pars Gas Field in Iran. The United States did not participate in this attack.",
+      "summary": "이스라엘이 미국 모르게 사우스파르스 가스전 공격. 트럼프, 미국 개입 부인.",
+      "date": "2026-03-18",
+      "url": "https://truthsocial.com/@realDonaldTrump/posts/116253388303392718"
+    },
+    {
+      "text": "I don't want to do a ceasefire. You don't do a ceasefire when you're literally obliterating the other side.",
+      "summary": "휴전 거부. '우리가 압도적으로 이기고 있을 때 휴전은 없다'고 강조.",
+      "date": "2026-03-20",
+      "url": "https://truthsocial.com/@realDonaldTrump"
+    }
+  ],
+  "warSummaryFull": "개전 23일차 (2026-03-22 기준). 트럼프는 3월 21일 Truth Social에 이란에 48시간 내 호르무즈 해협 전면 개방을 요구하고 불응 시 발전소부터 폭격하겠다고 경고했다. 동시에 이란전 '단계적 종료' 검토를 시사하며 혼재된 메시지를 발신. 네타냐후는 '전쟁이 예상보다 빨리 끝날 것'이라 언급, 유가가 소폭 하락($112→$105대). 미국은 제재 이란산 원유 약 1억4천만 배럴을 한시적으로 시장 공급 허용. 모자바 하메네이 신임 최고지도자는 여전히 행방불명 상태.",
+  "briefing": {
+    "title": "미·이스라엘-이란 전황 브리핑",
+    "dayLabel": "개전 23일차",
+    "operationName": "'Epic Fury(장대한 분노)' · 'Roaring Lion(포효하는 사자)' 작전",
+    "startDate": "2026-02-28",
+    "updatedKST": "2026년 3월 22일 09:24 KST",
+    "sources": [
+      "Wikipedia",
+      "연합뉴스",
+      "Al Jazeera",
+      "ISW",
+      "ACLED",
+      "Guardian",
+      "Reuters",
+      "OilPrice.com"
+    ],
+    "actors": [
+      {
+        "id": "us",
+        "nameKo": "미국·트럼프",
+        "flag": "🇺🇸",
+        "color": "blue",
+        "updates": [
+          "이란에 48시간 내 호르무즈 전면 개방 요구 또는 발전소 폭격 경고 (3/21)",
+          "나탄즈 핵시설 벙커버스터 재타격 (3/21)",
+          "이란전 '단계적 종료(winding down)' 검토 시사하면서도 휴전 거부",
+          "IEA 공조 전략비축유 4억 배럴 방출 (역대 최대)",
+          "제재 이란산 원유 1억4천만 배럴 한시 시장 공급 허용",
+          "중동 추가 파병 2,500명 해병대·군함 3척 증파",
+          "개전 비용 약 113억 달러+, 의회에 2천억 달러 추가 요청"
+        ]
+      },
+      {
+        "id": "israel",
+        "nameKo": "이스라엘·네타냐후",
+        "flag": "🇮🇱",
+        "color": "blue",
+        "updates": [
+          "네타냐후 '전쟁이 예상보다 빨리 끝날 것' 시사 (3/21)",
+          "트럼프 요청으로 사우스파르스 추가 공격 보류",
+          "이란 방공망 85%, 탄도미사일 발사대 60% 파괴 주장",
+          "테헤란 노루즈(이란 설날) 당일 공습 (3/19)",
+          "총 투하 폭탄 1만 2천 발 (개전 18일간 기준)"
+        ]
+      },
+      {
+        "id": "iran",
+        "nameKo": "이란",
+        "flag": "🇮🇷",
+        "color": "red",
+        "updates": [
+          "신임 최고지도자 모자바 하메네이 행방불명 지속",
+          "호르무즈 해협 봉쇄 지속, 미국 48시간 최후통첩 수신",
+          "카타르 라스라판 LNG 시설 보복 공격 (연간 200억 달러 수출 차질)",
+          "디에고가르시아 미군기지 미사일 공격 시도 → 실패",
+          "민간인 사망 3,065~7,378명+, 부상 19,000명+"
+        ]
+      }
+    ],
+    "hotspots": [
+      {
+        "area": "호르무즈 해협",
+        "status": "봉쇄 중 / 48시간 최후통첩",
+        "detail": "트럼프 3/21 경고: 48시간 내 개방 안 하면 발전소 폭격. 글로벌 원유·가스 공급 20% 차단"
+      },
+      {
+        "area": "사우스파르스 가스전",
+        "status": "이스라엘 타격 후 추가 공격 보류",
+        "detail": "세계 최대 가스전, 트럼프 요청으로 이스라엘 추가 공격 중단. 이란 가스 수출 급감"
+      },
+      {
+        "area": "카타르 라스라판",
+        "status": "이란 공격",
+        "detail": "LNG 수출 17% 감소, 유럽 천연가스 주간 +20% 급등"
+      },
+      {
+        "area": "레바논",
+        "status": "이스라엘 침공 중",
+        "detail": "사망 1,001명+, 피난민 80만명"
+      },
+      {
+        "area": "이란 발전소",
+        "status": "폭격 위협",
+        "detail": "트럼프 48시간 최후통첩: 호르무즈 미개방 시 최대 발전소부터 타격"
+      },
+      {
+        "area": "나탄즈 핵시설",
+        "status": "미국 재타격",
+        "detail": "3/21 벙커버스터 재타격, 핵 농축 능력 완전 무력화 주장"
+      }
+    ],
+    "energyEconomy": [
+      {
+        "label": "브렌트유",
+        "value": "$112.19",
+        "note": "배럴당 (3/20 종가), 장중 $119 돌파",
+        "up": true
+      },
+      {
+        "label": "WTI 원유",
+        "value": "$98.23",
+        "note": "배럴당 (3/20), 전월比 +48%",
+        "up": true
+      },
+      {
+        "label": "천연가스(HH)",
+        "value": "$3.095",
+        "note": "MMBtu (유럽 TTF는 주간 +20% 폭등)",
+        "up": false
+      },
+      {
+        "label": "한국 휘발유",
+        "value": "1,820원",
+        "note": "오피넷 전국평균 (3/22)",
+        "up": true
+      },
+      {
+        "label": "일본 휘발유",
+        "value": "190.8엔/L",
+        "note": "사상 최고치 (3/18 기준)",
+        "up": true
+      },
+      {
+        "label": "전쟁 비용 (미국)",
+        "value": "$113억+",
+        "note": "개전 6일 기준, 의회에 2천억 달러 추가 요청",
+        "up": true
+      },
+      {
+        "label": "전략비축유 방출",
+        "value": "4억 배럴",
+        "note": "IEA 공조 + 이란산 원유 1.4억 배럴 한시 해제",
+        "up": false
+      }
+    ],
+    "casualties": {
+      "iran": {
+        "label": "이란 민간인 사망",
+        "value": "3,065~7,378명+"
+      },
+      "iranWounded": {
+        "label": "이란 부상자",
+        "value": "19,000명+"
+      },
+      "lebanon": {
+        "label": "레바논 사망자",
+        "value": "1,001명+"
+      },
+      "israel": {
+        "label": "이스라엘 사망자",
+        "value": "22명"
+      },
+      "us": {
+        "label": "미군 사망자",
+        "value": "15명"
+      },
+      "gazaDay": {
+        "label": "가자 전쟁 경과",
+        "value": "888일째 (72,135명+)"
+      }
+    },
+    "timeline": [
+      {
+        "date": "2026-02-27",
+        "event": "오만 '협상 타결 임박' 발표 직후 트럼프, 작전 명령 하달",
+        "type": "diplomatic"
+      },
+      {
+        "date": "2026-02-28",
+        "event": "미국·이스라엘, 이란 기습 공습 개시 / 하메네이 암살",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-01",
+        "event": "이란, 텔아비브·하이파·걸프국 미사일 보복",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-02",
+        "event": "미국, 나탄즈 핵시설 첫 타격",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-03",
+        "event": "이스라엘, 레바논 남부 침공 / 헤즈볼라 참전",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-04",
+        "event": "이란, 카타르 알우데이드 공군기지·아람코 공격",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-07",
+        "event": "이란 대통령 '주변국 공격 중단' 선언",
+        "type": "diplomatic"
+      },
+      {
+        "date": "2026-03-08",
+        "event": "모자바 하메네이, 신임 최고지도자 선출",
+        "type": "diplomatic"
+      },
+      {
+        "date": "2026-03-10",
+        "event": "중국 NDRC, 연내 최대 폭 연료비 인상 (휘발유 +0.53위안/L)",
+        "type": "economic"
+      },
+      {
+        "date": "2026-03-14",
+        "event": "미국, 카르그섬 석유수출기지 대규모 폭격 (90개 표적)",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-17",
+        "event": "이스라엘, 이란 의회의장 라리자니 암살",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-18",
+        "event": "이스라엘, 사우스파르스 가스전 타격 / 이란 情報장관 암살",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-19",
+        "event": "이스라엘, 노루즈 당일 테헤란 공습 / 이란, 카타르 LNG 시설 보복",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-20",
+        "event": "트럼프 이란전 '단계적 종료' 시사 / 미국 제재 이란산 원유 1.4억 배럴 한시 해제",
+        "type": "diplomatic"
+      },
+      {
+        "date": "2026-03-21",
+        "event": "트럼프, 48시간 내 호르무즈 개방 요구 또는 발전소 폭격 경고 / 나탄즈 재타격",
+        "type": "military"
+      },
+      {
+        "date": "2026-03-22",
+        "event": "네타냐후 '전쟁 예상보다 빨리 끝날 것' / 모자바 행방불명 지속 / 호르무즈 48시간 데드라인 진행 중",
+        "type": "diplomatic"
+      }
+    ],
+    "keyAssassinations": [
+      "알리 하메네이 (최고지도자, 2/28)",
+      "나시르자데 (국방장관)",
+      "압돌라힘 무사비 (이란군 총사령관)",
+      "알리 라리자니 (의회의장, 3/17)",
+      "에스마일 하팁 (情報장관, 3/18)"
+    ]
+  },
+  "warNews": [
+    {
+      "title": "Oil Prices Slide as Netanyahu Signals Iran War Could End Soon",
+      "description": "네타냐후 '전쟁 예상보다 빨리 종료' 시사 후 유가 하락 반전. WTI $92, 브렌트 $105대로 조정.",
+      "link": "https://oilprice.com/Latest-Energy-News/World-News/Oil-Prices-Slide-as-Netanyahu-Signals-Iran-War-Could-End-Soon.html",
+      "pubDate": "2026-03-21",
+      "source": "OilPrice.com"
+    },
+    {
+      "title": "Trump issues 48-hour ultimatum to Iran: Open Hormuz or face power plant strikes",
+      "description": "트럼프, 이란에 48시간 내 호르무즈 전면 개방 요구. 불응 시 최대 발전소부터 폭격 경고.",
+      "link": "https://news.sky.com/story/iran-war-latest-trump-tehran-israel-strikes-us-drone-live-sky-news-13509565",
+      "pubDate": "2026-03-21",
+      "source": "Sky News / Guardian"
+    },
+    {
+      "title": "European Gas Price Set for 20% Weekly Jump on Qatar's LNG Outage",
+      "description": "이란의 카타르 LNG 시설 공격으로 유럽 천연가스 가격 주간 20% 폭등, 장기 공급 불안 현실화.",
+      "link": "https://oilprice.com/Latest-Energy-News/World-News/European-Gas-Price-Set-for-20-Weekly-Jump-on-Qatars-LNG-Outage.html",
+      "pubDate": "2026-03-20",
+      "source": "OilPrice.com"
+    },
+    {
+      "title": "Oil Prices Ease As US Pulls Out All Stops To Secure Supply",
+      "description": "미국이 제재 이란산 원유 해제·전략비축유 방출 등 총력 공급 안정화 나서며 유가 소폭 하락.",
+      "link": "https://oilprice.com/Latest-Energy-News/World-News/Oil-Prices-Ease-As-US-Pulls-Out-All-Stops-To-Secure-Supply.html",
+      "pubDate": "2026-03-20",
+      "source": "OilPrice.com"
+    },
+    {
+      "title": "Asian Refiners Pay Record Premiums for Non-Middle East Crude",
+      "description": "아시아 정유사, 중동산 대체 원유(노르웨이 등) 확보에 사상 최고 프리미엄 지불. 공급망 재편 가속.",
+      "link": "https://oilprice.com/Latest-Energy-News/World-News/Asian-Refiners-Pay-Record-Premiums-for-Non-Middle-East-Crude.html",
+      "pubDate": "2026-03-20",
+      "source": "OilPrice.com"
+    },
+    {
+      "title": "Wall St Week Ahead: Persistent Iran war, energy price surge set to loom over stocks",
+      "description": "이란 전쟁 장기화·에너지 가격 급등이 월가 주식시장 압박 지속 예상. 유가 $150 시나리오 경계.",
+      "link": "https://www.reuters.com/business/wall-st-week-ahead-persistent-iran-war-energy-price-surge-set-loom-over-stocks-2026-03-20/",
+      "pubDate": "2026-03-20",
+      "source": "Reuters"
+    },
+    {
+      "title": "Oil Prices Could Hit $150 If War Continues Through End of March",
+      "description": "전쟁이 3월 말까지 지속될 경우 유가 배럴당 $150 돌파 가능성. 호르무즈 봉쇄·공급 20% 차단 영향.",
+      "link": "https://oilprice.com/Latest-Energy-News/World-News/Oil-Prices-Could-Hit-150-If-War-Continues-Through-End-of-March.html",
+      "pubDate": "2026-03-20",
+      "source": "OilPrice.com"
+    },
+    {
+      "title": "Trump's mixed messages on Iran: 'Winding down' the war and easing sanctions but adding more troops",
+      "description": "트럼프, 종전 가능성 시사하면서도 해병 2500명 추가 파병·의회에 2000억 달러 전쟁 예산 요청 병행.",
+      "link": "https://www.ksat.com/news/politics/2026/03/21/trumps-mixed-messages-on-iran-winding-down-the-war-and-easing-sanctions-but-adding-more-troops/",
+      "pubDate": "2026-03-21",
+      "source": "AP / KSAT"
+    }
+  ],
+  "energyMatrix": {
+    "dataDate": "2026-03-16",
+    "updatedAt": "2026-03-22T10:00:00+08:00",
+    "source": "GlobalPetrolPrices.com",
+    "license": "CC BY-NC-ND 3.0",
+    "updateFrequency": "weekly",
+    "units": {
+      "gasoline": {
+        "unit": "USD/L",
+        "label": "휘발유"
+      },
+      "diesel": {
+        "unit": "USD/L",
+        "label": "경유"
+      },
+      "electricity": {
+        "unit": "USD/kWh",
+        "label": "전력요금"
+      },
+      "natural_gas": {
+        "unit": "USD/kWh",
+        "label": "천연가스"
+      },
+      "lpg": {
+        "unit": "USD/L",
+        "label": "LPG"
+      }
+    },
+    "worldAvg": {
+      "gasoline": 1.37,
+      "diesel": 1.38,
+      "electricity": 0.17,
+      "natural_gas": 0.087,
+      "lpg": 0.82
+    },
+    "countries": {
+      "South Korea": {
+        "gasoline": 1.445,
+        "diesel": 1.463,
+        "electricity": 0.126,
+        "natural_gas": 0.072,
+        "lpg": 0.769
+      },
+      "USA": {
+        "gasoline": 1.075,
+        "diesel": 1.34,
+        "electricity": 0.184,
+        "natural_gas": 0.047
+      },
+      "Japan": {
+        "gasoline": 0.997,
+        "diesel": 0.922,
+        "electricity": 0.229,
+        "natural_gas": 0.077
+      },
+      "China": {
+        "gasoline": 1.192,
+        "diesel": 1.059,
+        "electricity": 0.076,
+        "natural_gas": 0.05
+      },
+      "Germany": {
+        "gasoline": 2.343,
+        "diesel": 2.483,
+        "electricity": 0.404,
+        "natural_gas": 0.126,
+        "lpg": 1.276
+      },
+      "UK": {
+        "gasoline": 1.874,
+        "diesel": 2.121,
+        "electricity": 0.401,
+        "natural_gas": 0.099,
+        "lpg": 1.21
+      },
+      "France": {
+        "gasoline": 2.152,
+        "diesel": 2.328,
+        "electricity": 0.277,
+        "natural_gas": 0.142,
+        "lpg": 1.12
+      },
+      "Russia": {
+        "gasoline": 0.811,
+        "diesel": 0.936,
+        "electricity": 0.066,
+        "natural_gas": 0.008,
+        "lpg": 0.388
+      },
+      "India": {
+        "gasoline": 1.095,
+        "diesel": 0.98,
+        "electricity": 0.077,
+        "natural_gas": 0.049,
+        "lpg": 0.648
+      },
+      "Saudi Arabia": {
+        "gasoline": 0.621,
+        "diesel": 0.477,
+        "electricity": 0.052
+      },
+      "Iran": {
+        "gasoline": 0.029,
+        "diesel": 0.006,
+        "electricity": 0.003
+      },
+      "UAE": {
+        "gasoline": 0.675,
+        "diesel": 0.741,
+        "electricity": 0.08
+      },
+      "Qatar": {
+        "gasoline": 0.521,
+        "diesel": 0.563,
+        "electricity": 0.032
+      },
+      "Australia": {
+        "gasoline": 1.47,
+        "diesel": 1.662,
+        "electricity": 0.256,
+        "natural_gas": 0.1,
+        "lpg": 0.426
+      },
+      "Canada": {
+        "gasoline": 1.361,
+        "diesel": 1.55,
+        "electricity": 0.123,
+        "natural_gas": 0.036,
+        "lpg": 0.921
+      },
+      "Norway": {
+        "gasoline": 2.429,
+        "diesel": 2.607,
+        "electricity": 0.158
+      },
+      "Singapore": {
+        "gasoline": 2.583,
+        "diesel": 2.649,
+        "electricity": 0.234,
+        "natural_gas": 0.194
+      },
+      "Vietnam": {
+        "gasoline": 0.99,
+        "diesel": 1.038,
+        "electricity": 0.078
+      },
+      "Taiwan": {
+        "gasoline": 0.953,
+        "diesel": 0.881,
+        "electricity": 0.097,
+        "natural_gas": 0.046,
+        "lpg": 0.511
+      },
+      "Malaysia": {
+        "gasoline": 0.68,
+        "diesel": 0.795,
+        "electricity": 0.049
+      },
+      "Indonesia": {
+        "gasoline": 0.73,
+        "diesel": 0.861,
+        "electricity": 0.091
+      },
+      "Turkey": {
+        "gasoline": 1.4,
+        "diesel": 1.491,
+        "electricity": 0.067,
+        "natural_gas": 0.016,
+        "lpg": 0.684
+      },
+      "Brazil": {
+        "gasoline": 1.229,
+        "diesel": 1.293,
+        "electricity": 0.161,
+        "natural_gas": 0.21
+      },
+      "Israel": {
+        "gasoline": 2.346,
+        "diesel": 2.229,
+        "electricity": 0.179
+      },
+      "Hong Kong": {
+        "gasoline": 3.967,
+        "diesel": 4.003,
+        "electricity": 0.185,
+        "natural_gas": 0.144
+      }
+    },
+    "gasolineRanking": [
+      {
+        "country": "Libya",
+        "price": 0.023,
+        "rank": 1
+      },
+      {
+        "country": "Iran",
+        "price": 0.029,
+        "rank": 2
+      },
+      {
+        "country": "Venezuela",
+        "price": 0.035,
+        "rank": 3
+      },
+      {
+        "country": "Kuwait",
+        "price": 0.342,
+        "rank": 4
+      },
+      {
+        "country": "Algeria",
+        "price": 0.356,
+        "rank": 5
+      },
+      {
+        "country": "Qatar",
+        "price": 0.521,
+        "rank": 6
+      },
+      {
+        "country": "Saudi Arabia",
+        "price": 0.621,
+        "rank": 7
+      },
+      {
+        "country": "UAE",
+        "price": 0.675,
+        "rank": 8
+      },
+      {
+        "country": "Malaysia",
+        "price": 0.68,
+        "rank": 9
+      },
+      {
+        "country": "Indonesia",
+        "price": 0.73,
+        "rank": 10
+      },
+      {
+        "country": "Russia",
+        "price": 0.811,
+        "rank": 11
+      },
+      {
+        "country": "Vietnam",
+        "price": 0.99,
+        "rank": 12
+      },
+      {
+        "country": "Japan",
+        "price": 0.997,
+        "rank": 13
+      },
+      {
+        "country": "USA",
+        "price": 1.075,
+        "rank": 14
+      },
+      {
+        "country": "India",
+        "price": 1.095,
+        "rank": 15
+      },
+      {
+        "country": "China",
+        "price": 1.192,
+        "rank": 16
+      },
+      {
+        "country": "Canada",
+        "price": 1.361,
+        "rank": 17
+      },
+      {
+        "country": "Turkey",
+        "price": 1.4,
+        "rank": 18
+      },
+      {
+        "country": "South Korea",
+        "price": 1.445,
+        "rank": 19
+      },
+      {
+        "country": "Australia",
+        "price": 1.47,
+        "rank": 20
+      },
+      {
+        "country": "Brazil",
+        "price": 1.229,
+        "rank": 21
+      },
+      {
+        "country": "UK",
+        "price": 1.874,
+        "rank": 22
+      },
+      {
+        "country": "France",
+        "price": 2.152,
+        "rank": 23
+      },
+      {
+        "country": "Germany",
+        "price": 2.343,
+        "rank": 24
+      },
+      {
+        "country": "Israel",
+        "price": 2.346,
+        "rank": 25
+      },
+      {
+        "country": "Norway",
+        "price": 2.429,
+        "rank": 26
+      },
+      {
+        "country": "Netherlands",
+        "price": 2.531,
+        "rank": 27
+      },
+      {
+        "country": "Singapore",
+        "price": 2.583,
+        "rank": 28
+      },
+      {
+        "country": "Denmark",
+        "price": 2.603,
+        "rank": 29
+      },
+      {
+        "country": "Hong Kong",
+        "price": 3.967,
+        "rank": 30
+      }
+    ]
+  }
+}
