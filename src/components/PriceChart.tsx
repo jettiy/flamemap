@@ -15,6 +15,9 @@ import {
 } from 'recharts';
 import { Country, EnergyType, CategoryInfo } from '../data/types';
 import { buildGlobalMedianSeries, toKRW } from '../data/utils';
+import { WAR_START_DATE, CHART_HISTORY_FROM, CHART_HISTORY_TO } from '../data/constants';
+
+const COMPARE_COLORS = ['#f59e0b', '#10b981', '#8b5cf6'];
 
 interface PriceChartProps {
   selectedCountry: Country | null;
@@ -23,6 +26,7 @@ interface PriceChartProps {
   categoryInfo: CategoryInfo;
   countries: Country[];
   showKRW: boolean;
+  compareCountryIds?: string[];
 }
 
 interface ChartDataPoint {
@@ -30,6 +34,8 @@ interface ChartDataPoint {
   selected?: number;
   korea: number;
   median: number;
+  isReal?: boolean;
+  [key: string]: number | string | boolean | undefined;
 }
 
 const CustomTooltipContent = ({
@@ -69,31 +75,53 @@ const PriceChart: React.FC<PriceChartProps> = ({
   categoryInfo,
   countries,
   showKRW,
+  compareCountryIds = [],
 }) => {
   const globalMedian = useMemo(
     () => buildGlobalMedianSeries(countries, category),
     [countries, category]
   );
 
+  // 비교 국가 객체 배열 (최대 3개)
+  const compareCountries = useMemo(() => {
+    return compareCountryIds.slice(0, 3).map(id => countries.find(c => c.id === id)).filter(Boolean) as Country[];
+  }, [compareCountryIds, countries]);
+
   const chartData: ChartDataPoint[] = useMemo(() => {
     return globalMedian.map((gm, idx) => {
       const koreaPrice = koreaCountry.prices[category].history[idx]?.price ?? 0;
       const selectedPrice = selectedCountry?.prices[category].history[idx]?.price;
       const convert = (v: number) => showKRW ? toKRW(v, categoryInfo.unit).value : v;
-      return {
+      const koreaEntry = koreaCountry.prices[category].history[idx];
+      const point: ChartDataPoint = {
         date: gm.date,
         korea: parseFloat(convert(koreaPrice).toFixed(showKRW ? 0 : 4)),
         median: parseFloat(convert(gm.price).toFixed(showKRW ? 0 : 4)),
+        isReal: koreaEntry?.isReal === true,
         ...(selectedPrice !== undefined
           ? { selected: parseFloat(convert(selectedPrice).toFixed(showKRW ? 0 : 4)) }
           : {}),
       };
+      // 비교 국가 데이터 추가
+      compareCountries.forEach((cc) => {
+        const p = cc.prices[category].history[idx]?.price;
+        if (p !== undefined) {
+          point[`compare_${cc.id}`] = parseFloat(convert(p).toFixed(showKRW ? 0 : 4));
+        }
+      });
+      return point;
     });
-  }, [globalMedian, koreaCountry, selectedCountry, category, showKRW, categoryInfo.unit]);
+  }, [globalMedian, koreaCountry, selectedCountry, category, showKRW, categoryInfo.unit, compareCountries]);
 
-  const allValues = chartData.flatMap((d) =>
-    [d.korea, d.median, d.selected].filter((v): v is number => v !== undefined)
-  );
+  const allValues = chartData.flatMap((d) => {
+    const vals: number[] = [d.korea as number, d.median as number];
+    if (d.selected !== undefined) vals.push(d.selected as number);
+    compareCountries.forEach(cc => {
+      const v = d[`compare_${cc.id}`];
+      if (v !== undefined) vals.push(v as number);
+    });
+    return vals.filter((v): v is number => v !== undefined && !isNaN(v));
+  });
   const yMin = allValues.length > 0 ? Math.floor(Math.min(...allValues) * 0.9) : 0;
   const yMax = allValues.length > 0 ? Math.ceil(Math.max(...allValues) * 1.05) : 100;
   const lastDate = chartData[chartData.length - 1]?.date ?? '2026-03';
@@ -105,10 +133,16 @@ const PriceChart: React.FC<PriceChartProps> = ({
           <h3 className="text-sm font-semibold text-white">
             {categoryInfo.icon} {categoryInfo.nameKo} 가격 추이
           </h3>
-          <p className="text-xs text-slate-500 mt-0.5">2025.01 – 2026.03</p>
+          <p className="text-xs text-slate-500 mt-0.5">{CHART_HISTORY_FROM.replace('-','.')} – {CHART_HISTORY_TO.replace('-','.')}</p>
         </div>
-        <div className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded border border-orange-400/30">
-          🔴 전쟁 발발: 2026.01.20
+        <div className="flex items-center gap-2">
+          <div className="text-xs text-orange-400 bg-orange-400/10 px-2 py-1 rounded border border-orange-400/30">
+            🔴 개전: {WAR_START_DATE.slice(0,7).replace('-','.')}
+          </div>
+          <div className="text-xs text-slate-500 hidden md:flex items-center gap-1">
+            <span className="w-3 h-3 rounded-full bg-blue-500 border-2 border-white inline-block" />
+            실측
+          </div>
         </div>
       </div>
       <div className="flex-1 min-h-0">
@@ -149,12 +183,12 @@ const PriceChart: React.FC<PriceChartProps> = ({
               formatter={(value: string) => <span style={{ color: '#94a3b8' }}>{value}</span>}
             />
             <ReferenceArea
-              x1="2026-01"
+              x1={WAR_START_DATE.slice(0,7)}
               x2={lastDate}
               fill="url(#warZoneGradient)"
             />
             <ReferenceLine
-              x="2026-01"
+              x={WAR_START_DATE.slice(0,7)}
               stroke="#f97316"
               strokeWidth={2}
               strokeDasharray="5 3"
@@ -177,8 +211,13 @@ const PriceChart: React.FC<PriceChartProps> = ({
               name="대한민국"
               stroke="#3b82f6"
               strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 4, fill: '#3b82f6' }}
+              dot={(props: any) => {
+                if (props.payload?.isReal) {
+                  return <circle key={props.key} cx={props.cx} cy={props.cy} r={4} fill="#3b82f6" stroke="#fff" strokeWidth={1.5} />;
+                }
+                return <g key={props.key} />;
+              }}
+              activeDot={{ r: 5, fill: '#3b82f6' }}
             />
             {selectedCountry && (
               <Line
@@ -191,6 +230,20 @@ const PriceChart: React.FC<PriceChartProps> = ({
                 activeDot={{ r: 5, fill: '#ef4444' }}
               />
             )}
+            {/* 비교 국가 라인들 */}
+            {compareCountries.map((cc, i) => (
+              <Line
+                key={cc.id}
+                type="monotone"
+                dataKey={`compare_${cc.id}`}
+                name={cc.nameKo}
+                stroke={COMPARE_COLORS[i]}
+                strokeWidth={1.8}
+                strokeDasharray="6 3"
+                dot={false}
+                activeDot={{ r: 4, fill: COMPARE_COLORS[i] }}
+              />
+            ))}
           </ComposedChart>
         </ResponsiveContainer>
       </div>

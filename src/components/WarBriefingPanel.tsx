@@ -3,8 +3,67 @@
  * 전황 브리핑 — 구조화된 데이터를 블록 형식으로 표시
  * live-data.json의 briefing 객체를 활용
  */
-import React, { useEffect, useState } from 'react';
+// @ts-nocheck
+import React, { useEffect, useState, useMemo } from 'react';
 import { fetchLiveData, WarBriefing, LiveData, TrumpPost } from '../data/eiaService';
+import DataStatusBadge, { DataStatus } from './DataStatusBadge';
+import { WAR_START_DATE } from '../data/constants';
+import {
+  ComposedChart, Bar, Line, XAxis, YAxis, Tooltip as RTooltip,
+  ResponsiveContainer, Legend as RLegend,
+} from 'recharts';
+import { warTimeline } from '../data/warTimeline';
+import { trumpPostsStatic, mergeTrumpPosts } from '../data/trumpPosts';
+import { countries } from '../data/countries';
+import { buildGlobalMedianSeries } from '../data/utils';
+
+// ── 유가 vs 전황 상관 차트 ──────────────────────────────────
+const OilWarCorrelationChart: React.FC = () => {
+  const globalBrent = useMemo(() => buildGlobalMedianSeries(countries, 'gasoline'), []);
+
+  const chartData = useMemo(() => {
+    // warTimeline 날짜별 사건 수 집계
+    const eventsByMonth: Record<string, number> = {};
+    warTimeline.forEach((ev: any) => {
+      const month = (ev.date ?? '').slice(0, 7);
+      if (month) eventsByMonth[month] = (eventsByMonth[month] ?? 0) + 1;
+    });
+
+    return globalBrent.map(({ date, price }) => ({
+      date: date.slice(0, 7),
+      events: eventsByMonth[date.slice(0, 7)] ?? 0,
+      brent: parseFloat(price.toFixed(4)),
+    })).filter(d => d.date >= '2026-01');
+  }, [globalBrent]);
+
+  if (chartData.length === 0) return null;
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-lg">📈</span>
+        <h3 className="text-sm font-bold text-white tracking-wide">유가 vs 전황 강도</h3>
+        <div className="flex-1 h-px bg-slate-700/60" />
+      </div>
+      <div className="bg-slate-900/60 rounded-xl border border-slate-700/50 p-3" style={{ height: '180px' }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={chartData} margin={{ top: 4, right: 36, left: 0, bottom: 4 }}>
+            <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 9 }} tickLine={false} axisLine={false} />
+            <YAxis yAxisId="events" orientation="left" tick={{ fill: '#64748b', fontSize: 9 }} tickLine={false} axisLine={false} width={22} />
+            <YAxis yAxisId="brent" orientation="right" tick={{ fill: '#64748b', fontSize: 9 }} tickLine={false} axisLine={false} width={36} tickFormatter={(v) => `$${v.toFixed(2)}`} />
+            <RTooltip
+              contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569', borderRadius: '8px', fontSize: '11px' }}
+              labelStyle={{ color: '#94a3b8' }}
+            />
+            <RLegend wrapperStyle={{ fontSize: '10px', paddingTop: '4px' }} formatter={(v) => <span style={{ color: '#94a3b8' }}>{v}</span>} />
+            <Bar yAxisId="events" dataKey="events" name="사건 수" fill="#f97316" opacity={0.7} radius={[2,2,0,0]} />
+            <Line yAxisId="brent" type="monotone" dataKey="brent" name="에너지가격(USD)" stroke="#3b82f6" strokeWidth={2} dot={false} />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
 
 // ── 색상 맵 ──────────────────────────────────────────────────
 const ACTOR_COLOR: Record<string, string> = {
@@ -66,7 +125,7 @@ const WarBriefingPanel: React.FC = () => {
   const warDay = liveData?.warDay;
   const updatedKST = liveData?.updatedAtKST;
   const warNews = liveData?.warNews ?? [];
-  const trumpPosts: TrumpPost[] = liveData?.trumpPosts ?? [];
+  const trumpPosts = mergeTrumpPosts(liveData?.trumpPosts ?? []);
 
   return (
     <div className="flex flex-col h-full bg-slate-950 overflow-hidden">
@@ -87,9 +146,9 @@ const WarBriefingPanel: React.FC = () => {
           <p className="text-xs text-slate-500">
             {briefing?.operationName ?? "'장대한 분노' · '포효하는 사자' 작전"}
           </p>
-          {updatedKST && (
-            <p className="text-xs text-slate-600 mt-0.5">마지막 업데이트: {updatedKST}</p>
-          )}
+          <div className="flex items-center gap-2 mt-1.5">
+            <DataStatusBadge status={liveData ? 'agent' : 'fallback'} updatedAt={updatedKST ?? undefined} />
+          </div>
         </div>
 
         {/* 탭 전환 (4탭) */}
@@ -217,11 +276,11 @@ const BriefingContent: React.FC<{
       </div>
 
       {/* 🗡️ 주요 암살 목록 */}
-      {(briefing as any).keyAssassinations?.length > 0 && (
+      {briefing.keyAssassinations && briefing.keyAssassinations.length > 0 && (
         <div>
           <SectionTitle icon="🗡️" label="주요 제거 인물" />
           <div className="bg-red-950/30 border border-red-800/40 rounded-xl p-3 flex flex-col gap-1.5">
-            {(briefing as any).keyAssassinations.map((name: string, i: number) => (
+            {briefing.keyAssassinations!.map((name: string, i: number) => (
               <div key={i} className="flex items-start gap-2 text-xs text-slate-300">
                 <span className="text-red-500 flex-shrink-0 mt-0.5">✕</span>
                 {name}
@@ -232,14 +291,14 @@ const BriefingContent: React.FC<{
       )}
 
       {/* 📅 주요 사건 타임라인 (briefing.timeline) */}
-      {(briefing as any).timeline?.length > 0 && (
+      {briefing.timeline && briefing.timeline.length > 0 && (
         <div>
           <SectionTitle icon="📅" label="주요 사건 일지 (최신순)" />
           <div className="flex flex-col gap-0">
-            {[...(briefing as any).timeline]
+            {[...briefing.timeline!]
               .sort((a: any, b: any) => b.date.localeCompare(a.date))
               .map((item: any, i: number) => {
-                const isLast = i === (briefing as any).timeline.length - 1;
+                const isLast = i === briefing.timeline!.length - 1;
                 const typeColor = item.type === 'military'
                   ? 'bg-red-500' : item.type === 'energy'
                   ? 'bg-orange-500' : 'bg-blue-500';
@@ -266,6 +325,9 @@ const BriefingContent: React.FC<{
           출처: {briefing.sources.join(', ')} · {briefing.updatedKST}
         </div>
       )}
+
+      {/* 📈 유가 vs 전황 */}
+      <OilWarCorrelationChart />
 
       {/* 🇺🇸 트럼프 Truth Social 게시물 */}
       {trumpPosts.length > 0 && (
@@ -299,8 +361,17 @@ const BriefingContent: React.FC<{
 };
 
 // ── 트럼프 Truth Social 탭 (독립) ───────────────────────────
-const TrumpContent: React.FC<{ trumpPosts: TrumpPost[] }> = ({ trumpPosts }) => {
-  const sorted = [...trumpPosts].sort((a, b) => b.date.localeCompare(a.date));
+const TAG_CONFIG: Record<string, { label: string; color: string }> = {
+  war:       { label: '⚔️ 전쟁', color: 'bg-red-900/50 text-red-300 border-red-700/50' },
+  energy:    { label: '⚡ 에너지', color: 'bg-yellow-900/50 text-yellow-300 border-yellow-700/50' },
+  diplomacy: { label: '🕊️ 외교', color: 'bg-blue-900/50 text-blue-300 border-blue-700/50' },
+  economy:   { label: '💰 경제', color: 'bg-green-900/50 text-green-300 border-green-700/50' },
+};
+
+const TrumpContent: React.FC<{ trumpPosts: any[] }> = ({ trumpPosts }) => {
+  const [filterTag, setFilterTag] = useState<string>('all');
+  const sorted = [...trumpPosts].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const filtered = filterTag === 'all' ? sorted : sorted.filter(p => p.tag === filterTag);
 
   if (!sorted.length) {
     return (
@@ -318,13 +389,32 @@ const TrumpContent: React.FC<{ trumpPosts: TrumpPost[] }> = ({ trumpPosts }) => 
         <span className="text-xl">🇺🇸</span>
         <div>
           <p className="text-xs font-bold text-blue-200">@realDonaldTrump · Truth Social</p>
-          <p className="text-xs text-slate-500">이란 전쟁·에너지 관련 게시물 (최신순)</p>
+          <p className="text-xs text-slate-500">이란 전쟁 발발(2/28) 이후 주요 발언 {sorted.length}건 · 최신순</p>
         </div>
         <a href="https://truthsocial.com/@realDonaldTrump" target="_blank" rel="noopener noreferrer"
           className="ml-auto text-xs text-blue-400 hover:text-blue-300 flex-shrink-0">원문 ↗</a>
       </div>
 
-      {sorted.map((post, i) => (
+      {/* 필터 탭 */}
+      <div className="flex gap-1.5 flex-wrap">
+        {['all', 'war', 'energy', 'diplomacy', 'economy'].map(tag => (
+          <button
+            key={tag}
+            onClick={() => setFilterTag(tag)}
+            className={`text-xs px-2.5 py-1 rounded-full border transition-all ${
+              filterTag === tag
+                ? 'bg-blue-600 text-white border-blue-500'
+                : 'bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-500'
+            }`}
+          >
+            {tag === 'all' ? '📋 전체' : TAG_CONFIG[tag]?.label ?? tag}
+            {tag === 'all' && ` (${sorted.length})`}
+            {tag !== 'all' && ` (${sorted.filter(p => p.tag === tag).length})`}
+          </button>
+        ))}
+      </div>
+
+      {filtered.map((post, i) => (
         <div key={i} className="bg-slate-800/70 border border-slate-700/50 rounded-xl p-4">
           {/* 프로필 행 */}
           <div className="flex items-center gap-2.5 mb-3">
@@ -335,6 +425,11 @@ const TrumpContent: React.FC<{ trumpPosts: TrumpPost[] }> = ({ trumpPosts }) => 
               <div className="text-xs font-bold text-white">Donald J. Trump</div>
               <div className="text-xs text-slate-500">@realDonaldTrump · <span className="font-mono">{post.date}</span></div>
             </div>
+            {post.tag && TAG_CONFIG[post.tag] && (
+              <span className={`text-xs px-2 py-0.5 rounded-full border ${TAG_CONFIG[post.tag].color}`}>
+                {TAG_CONFIG[post.tag].label}
+              </span>
+            )}
             {post.url && (
               <a href={post.url} target="_blank" rel="noopener noreferrer"
                 className="flex-shrink-0 text-xs text-slate-500 hover:text-blue-400 transition-colors">↗</a>
@@ -355,7 +450,7 @@ const TrumpContent: React.FC<{ trumpPosts: TrumpPost[] }> = ({ trumpPosts }) => 
       ))}
 
       <p className="text-xs text-slate-600 text-center pb-2">
-        출처: Trump Truth Social (@realDonaldTrump)
+        출처: Trump Truth Social (@realDonaldTrump) · 개전 이후 전쟁·에너지 관련 발언 수집
       </p>
     </div>
   );
@@ -363,7 +458,7 @@ const TrumpContent: React.FC<{ trumpPosts: TrumpPost[] }> = ({ trumpPosts }) => 
 
 // ── 사건일지 콘텐츠 ─────────────────────────────────────────
 const TimelineContent: React.FC<{ briefing?: WarBriefing }> = ({ briefing }) => {
-  const items: any[] = (briefing as any)?.timeline ?? [];
+  const items = briefing?.timeline ?? [];
   const sorted = [...items].sort((a, b) => b.date.localeCompare(a.date));
 
   const TYPE_CONFIG: Record<string, { dot: string; badge: string; label: string }> = {

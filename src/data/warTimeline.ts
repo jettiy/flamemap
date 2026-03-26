@@ -1,6 +1,7 @@
 /**
- * 이란-미국/이스라엘 전쟁(2026년 1월 20일~) 관련
+ * 이란-미국/이스라엘 전쟁(2026년 2월 28일~) 관련
  * 에너지 시장 주요 사건 타임라인
+ * ⚠️ 기준일: constants.ts의 WAR_START_DATE ('2026-02-28')
  */
 
 export interface WarEvent {
@@ -14,15 +15,15 @@ export interface WarEvent {
 
 export const warTimeline: WarEvent[] = [
   {
-    date: '2026-01-20',
-    title: '이란-이스라엘 전면전 선포',
-    description: '이스라엘의 이란 핵시설 선제 공습으로 전면전 돌입. 이란 최고지도자 즉각 보복 선언.',
+    date: '2026-02-28',
+    title: '이란-이스라엘 전면전 개전',
+    description: '미국·이스라엘 연합군 이란 기습 공습. 하메네이 최고지도자 사망. 이란 즉각 보복 선언.',
     impact: 'critical',
     priceImpact: 12.5,
     category: 'military',
   },
   {
-    date: '2026-01-22',
+    date: '2026-03-01',
     title: '호르무즈 해협 위협 선언',
     description: '이란 혁명수비대, 호르무즈 해협 봉쇄 가능성 공식 경고. 전세계 유조선 운항 지연.',
     impact: 'critical',
@@ -38,7 +39,7 @@ export const warTimeline: WarEvent[] = [
     category: 'military',
   },
   {
-    date: '2026-01-25',
+    date: '2026-03-03',
     title: '이란 석유 수출 일부 제한',
     description: '이란 국영석유공사(NIOC), 일일 수출량 120만 배럴 감산 선언.',
     impact: 'critical',
@@ -46,7 +47,7 @@ export const warTimeline: WarEvent[] = [
     category: 'energy',
   },
   {
-    date: '2026-01-28',
+    date: '2026-03-05',
     title: 'G7 긴급 에너지 회의 소집',
     description: 'G7 에너지 장관 긴급 화상회의 개최. 공동 전략비축유 방출 검토.',
     impact: 'medium',
@@ -54,7 +55,7 @@ export const warTimeline: WarEvent[] = [
     category: 'diplomatic',
   },
   {
-    date: '2026-02-01',
+    date: '2026-03-07',
     title: '미국 대이란 제재 대폭 강화',
     description: '美 재무부, 이란 석유 수출 관련 140개 기업·개인 추가 제재. SWIFT 차단 확대.',
     impact: 'high',
@@ -62,7 +63,7 @@ export const warTimeline: WarEvent[] = [
     category: 'sanction',
   },
   {
-    date: '2026-02-05',
+    date: '2026-03-09',
     title: '중국·러시아 이란 지지 성명',
     description: '중러 공동성명으로 이란산 석유 계속 수입 의사 표명. 달러 우회 결제 논의.',
     impact: 'medium',
@@ -70,7 +71,7 @@ export const warTimeline: WarEvent[] = [
     category: 'diplomatic',
   },
   {
-    date: '2026-02-10',
+    date: '2026-03-12',
     title: '이스라엘, 이란 정유시설 공습',
     description: '이스라엘 공군, 아바단 정유시설 및 반다르아바스 항구 정밀 타격. 처리량 40% 감소.',
     impact: 'critical',
@@ -86,7 +87,7 @@ export const warTimeline: WarEvent[] = [
     category: 'energy',
   },
   {
-    date: '2026-02-15',
+    date: '2026-03-14',
     title: 'OPEC 긴급회의 - 감산 유지',
     description: 'OPEC+ 긴급 화상회의 결과, 현행 감산 유지 결정. 사우디 추가 증산 거부.',
     impact: 'high',
@@ -94,7 +95,7 @@ export const warTimeline: WarEvent[] = [
     category: 'energy',
   },
   {
-    date: '2026-02-20',
+    date: '2026-03-17',
     title: '호르무즈 해협 72시간 봉쇄',
     description: '이란 혁명수비대, 기뢰 부설 및 해협 일시 봉쇄. 전세계 유조선 100척 이상 대기.',
     impact: 'critical',
@@ -143,10 +144,34 @@ export const warTimeline: WarEvent[] = [
   },
   {
     date: '2026-03-21',
-    title: '긴장 지속 - 교전 소강 상태',
-    description: '직접 교전은 줄었으나 호르무즈 해협 위협 지속. 유가 $118~125 박스권 등락.',
-    impact: 'medium',
-    priceImpact: 1.0,
+    title: '나탄즈 재타격·호르무즈 최후통첩',
+    description: '미국, 이란 나탄즈 핵시설 벙커버스터 재타격. 트럼프 "48시간 내 호르무즈 개방" 최후통첩.',
+    impact: 'critical',
+    priceImpact: 4.2,
     category: 'military',
+  },
+  {
+    date: '2026-03-22',
+    title: '이란, 이스라엘 핵시설 인근 타격',
+    description: '이란, 디모나 핵연구소 인근 타격. 이스라엘 남부 160명 이상 부상. 이란 걸프 에너지 인프라 보복 경고.',
+    impact: 'critical',
+    priceImpact: 3.5,
+    category: 'military',
+  },
+  {
+    date: '2026-03-23',
+    title: '트럼프 공습 유예·협상 진전 선언',
+    description: '트럼프, 이란 에너지시설 공습 5일 유예 + 미·이란 "매우 좋은 회의" 확인. 브렌트유 -10% 폭락.',
+    impact: 'critical',
+    priceImpact: -10.2,
+    category: 'diplomatic',
+  },
+  {
+    date: '2026-03-24',
+    title: '미·이란 협상 지속·유가 $101 안정',
+    description: '트럼프 "이란에 평화 마지막 기회" 발언. 이스라엘 공습 지속 속 협상 병행. 브렌트유 $101.34.',
+    impact: 'critical',
+    priceImpact: -1.5,
+    category: 'diplomatic',
   },
 ];

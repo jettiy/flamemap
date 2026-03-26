@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchLiveData, EnergyMatrix } from '../data/eiaService';
+import { ENERGY_DATA_REFERENCE_DATE } from '../data/constants';
 
 type EnergyKey = 'gasoline' | 'diesel' | 'electricity' | 'natural_gas' | 'lpg';
 
@@ -92,9 +93,14 @@ const EnergyMatrixPanel: React.FC<EnergyMatrixPanelProps> = () => {
           <h2 className="text-sm font-bold text-white">🌍 국가별 에너지 요금 비교</h2>
           <span className="text-xs text-slate-500 ml-auto">출처: GlobalPetrolPrices.com</span>
         </div>
-        <p className="text-xs text-slate-600 mb-2">
-          기준일: {matrix.dataDate} · 매주 업데이트 · {matrix.license}
-        </p>
+        <div className="flex items-center gap-2 mb-2">
+          <p className="text-xs text-slate-600">
+            기준일: {matrix.dataDate} · 매주 업데이트 · {matrix.license}
+          </p>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400 font-medium flex-shrink-0">
+            기준일: {ENERGY_DATA_REFERENCE_DATE}
+          </span>
+        </div>
 
         {/* 에너지 종류 탭 */}
         <div className="flex gap-0 overflow-x-auto scrollbar-hide -mx-1">

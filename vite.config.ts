@@ -18,4 +18,20 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-recharts': ['recharts'],
+          'vendor-geo': ['d3-geo', 'd3-scale', 'd3-interpolate', 'topojson-client'],
+          'chunk-map': ['./src/components/WorldMap'],
+          'chunk-chart': ['./src/components/PriceChart'],
+          'chunk-briefing': ['./src/components/WarBriefingPanel'],
+          'chunk-ranking': ['./src/components/RankingPanel', './src/components/RankingSubTabs', './src/components/EnergyMatrixPanel'],
+          'chunk-timeline': ['./src/components/WarTimeline'],
+        }
+      }
+    }
+  }
 })

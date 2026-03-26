@@ -19,11 +19,15 @@ import WarBriefingPanel from './components/WarBriefingPanel';
 import ShareCard from './components/ShareCard';
 import MarketTicker from './components/MarketTicker';
 import CountryNewsPanel from './components/CountryNewsPanel';
+import DataStatusBadge from './components/DataStatusBadge';
+import ShockSimulator from './components/ShockSimulator';
+import CountrySearch from './components/CountrySearch';
+import { fetchLiveData } from './data/eiaService';
 
 /* ══════════════════════════════════════════════════════
    데스크탑 섹션 (비교 탭 제거)
 ══════════════════════════════════════════════════════ */
-type DesktopSection = 'map' | 'chart' | 'ranking' | 'timeline' | 'briefing';
+type DesktopSection = 'map' | 'chart' | 'ranking' | 'timeline' | 'briefing' | 'simulator';
 
 const DESKTOP_SIDEBAR: { id: DesktopSection; label: string; icon: string }[] = [
   { id: 'map',      label: '지도',     icon: '🗺️' },
@@ -49,14 +53,32 @@ function App() {
   const [category, setCategory]             = useState<EnergyType>('gasoline');
   const [selectedCountryId, setSelectedCountryId] = useState<string | null>(null);
   const [showKRW, setShowKRW]               = useState(false);
+  const [compareCountryIds, setCompareCountryIds] = useState<string[]>([]);
   const [mobileTab, setMobileTab]           = useState<MobileTab>('map');
   const [prevTab, setPrevTab]               = useState<MobileTab>('map');
   const [chartHighlight, setChartHighlight] = useState(false);
   const [continent, setContinent]           = useState<ContinentKey>('world');
   const [showShareCard, setShowShareCard]   = useState(false);
-  const [mapMode, setMapMode]               = useState<'price' | 'import'>('price');
+  const [mapMode, setMapMode]               = useState<'price' | 'import' | 'security'>('price');
   const [desktopSection, setDesktopSection] = useState<DesktopSection>('map');
   const [isDark, setIsDark]                 = useState(true); // 기본 다크
+  const [lastUpdated, setLastUpdated]       = useState<string | undefined>(undefined);
+
+  // 전역 데이터 최신성 확인
+  useEffect(() => {
+    fetchLiveData().then((d) => {
+      if (d?.updatedAtKST) setLastUpdated(d.updatedAtKST);
+    });
+  }, []);
+
+  // URL params 딥링크 읽기
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const countryParam = params.get('country');
+    const typeParam = params.get('type') as EnergyType | null;
+    if (countryParam) setSelectedCountryId(countryParam);
+    if (typeParam && categories.find((c) => c.id === typeParam)) setCategory(typeParam);
+  }, []);
 
   // 테마 적용
   useEffect(() => {
@@ -76,6 +98,11 @@ function App() {
 
   const handleCountrySelect = (countryId: string) => {
     setSelectedCountryId(countryId);
+    // URL 딥링크 업데이트
+    const url = new URL(window.location.href);
+    url.searchParams.set('country', countryId);
+    url.searchParams.set('type', category);
+    window.history.replaceState({}, '', url.toString());
     if (window.innerWidth < 640) {
       setPrevTab(mobileTab);
       setMobileTab('chart');
@@ -146,9 +173,9 @@ function App() {
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className={`hidden sm:flex items-center gap-1.5 text-xs ${t.textMuted} border ${t.border} rounded-lg px-2.5 py-1`}>
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />2026.03.16 기준
-          </span>
+          <div className="hidden sm:flex items-center">
+            <DataStatusBadge status="agent" updatedAt={lastUpdated} />
+          </div>
 
           {/* 공유 */}
           <button onClick={() => selectedCountry && setShowShareCard(true)} disabled={!selectedCountry}
@@ -172,6 +199,12 @@ function App() {
               showKRW ? t.btnActive : t.btnSecondary
             }`}
           >{showKRW ? '₩ KRW' : '$ USD'}</button>
+
+          {/* 국가 검색 */}
+          <CountrySearch
+            countries={countries}
+            onSelect={(id) => handleCountrySelect(id)}
+          />
 
           {/* 다크/라이트 토글 */}
           <button onClick={() => setIsDark(d => !d)}
@@ -240,7 +273,7 @@ function App() {
             {/* 지도 섹션: 지도 + 차트 + 랭킹 3단 */}
             {desktopSection === 'map' && (
               <>
-                <div className="flex flex-col min-h-0" style={{ flex: '8' }}>
+                <div className="flex flex-col min-h-0" style={{ flex: '11' }}>
                   <div className={`flex-1 min-h-0 rounded-xl overflow-hidden border ${t.mapBorder}`}>
                     <WorldMap countries={countries} selectedCountry={selectedCountry}
                       category={category} continent={continent}
@@ -251,11 +284,12 @@ function App() {
                     <MapLegend category={category} mapMode={mapMode} />
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 min-h-0" style={{ flex: '4' }}>
+                <div className="flex flex-col gap-2 min-h-0" style={{ flex: '3' }}>
                   <div className={`min-h-0 rounded-xl transition-all duration-500 ${chartHighlight ? 'ring-2 ring-blue-400 ring-offset-2' : ''}`} style={{ flex: '5' }}>
                     <PriceChart selectedCountry={selectedCountry} koreaCountry={koreaCountry}
                       category={category} categoryInfo={categoryInfo}
                       countries={countries} showKRW={showKRW}
+                      compareCountryIds={compareCountryIds}
                     />
                   </div>
                   <div className="min-h-0 overflow-hidden rounded-xl" style={{ flex: '6' }}>
@@ -272,11 +306,43 @@ function App() {
             {/* 차트 섹션: 풀 화면 차트 + 우측 국가 뉴스 */}
             {desktopSection === 'chart' && (
               <>
-                <div className={`flex-1 min-h-0 rounded-xl overflow-hidden border ${t.mapBorder}`}>
-                  <PriceChart selectedCountry={selectedCountry} koreaCountry={koreaCountry}
-                    category={category} categoryInfo={categoryInfo}
-                    countries={countries} showKRW={showKRW}
-                  />
+                <div className="flex-1 min-h-0 flex flex-col gap-2">
+                  <div className={`flex-1 min-h-0 rounded-xl overflow-hidden border ${t.mapBorder}`}>
+                    <PriceChart selectedCountry={selectedCountry} koreaCountry={koreaCountry}
+                      category={category} categoryInfo={categoryInfo}
+                      countries={countries} showKRW={showKRW}
+                      compareCountryIds={compareCountryIds}
+                    />
+                  </div>
+                  {/* 비교 국가 선택 */}
+                  <div className="flex-shrink-0 flex items-center gap-2 px-1 flex-wrap">
+                    <span className="text-xs text-slate-500">비교 국가:</span>
+                    {['US','JP','DE','CN','SA','RU','IL','IR'].map((cid) => {
+                      const c = countries.find((x) => x.id === cid);
+                      if (!c) return null;
+                      const idx = compareCountryIds.indexOf(cid);
+                      const isSelected = idx !== -1;
+                      const colors = ['#f59e0b','#10b981','#8b5cf6'];
+                      return (
+                        <button key={cid}
+                          onClick={() => {
+                            if (isSelected) {
+                              setCompareCountryIds((prev) => prev.filter((x) => x !== cid));
+                            } else if (compareCountryIds.length < 3) {
+                              setCompareCountryIds((prev) => [...prev, cid]);
+                            }
+                          }}
+                          className={`px-2 py-1 rounded-lg text-xs transition-colors border ${isSelected ? 'font-bold text-white' : t.btnSecondary}`}
+                          style={isSelected ? { borderColor: colors[idx], backgroundColor: colors[idx] + '22' } : {}}
+                        >
+                          {c.nameKo}
+                        </button>
+                      );
+                    })}
+                    {compareCountryIds.length > 0 && (
+                      <button onClick={() => setCompareCountryIds([])} className="text-xs text-slate-500 hover:text-slate-300">초기화</button>
+                    )}
+                  </div>
                 </div>
                 {selectedCountry && (
                   <div className="w-72 flex-shrink-0 overflow-y-auto">
@@ -314,6 +380,13 @@ function App() {
             {desktopSection === 'briefing' && (
               <div className={`flex-1 min-h-0 overflow-hidden rounded-xl border ${t.mapBorder}`}>
                 <WarBriefingPanel />
+              </div>
+            )}
+
+            {/* 시민레이터 섹션 */}
+            {desktopSection === 'simulator' && (
+              <div className={`flex-1 min-h-0 overflow-hidden rounded-xl border ${t.mapBorder}`}>
+                <ShockSimulator showKRW={showKRW} />
               </div>
             )}
 
@@ -357,6 +430,7 @@ function App() {
                 <PriceChart selectedCountry={selectedCountry} koreaCountry={koreaCountry}
                   category={category} categoryInfo={categoryInfo}
                   countries={countries} showKRW={showKRW}
+                  compareCountryIds={compareCountryIds}
                 />
               </div>
               {selectedCountry && (

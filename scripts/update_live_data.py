@@ -14,7 +14,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 KST = timezone(timedelta(hours=9))
-OUTPUT_PATH = Path("/workspace/fuel-war-map/public/live-data.json")
+OUTPUT_PATH = Path(__file__).resolve().parent.parent / "public" / "live-data.json"
 
 # ─── 기존 데이터 로드 (폴백용) ─────────────────────────────
 def load_existing() -> dict:

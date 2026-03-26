@@ -138,7 +138,7 @@ interface WorldMapProps {
   category?: EnergyType;
   showKRW?: boolean;
   continent?: ContinentKey;
-  mapMode?: 'price' | 'import';
+  mapMode?: 'price' | 'import' | 'security';
 }
 
 interface TooltipState {
@@ -241,6 +241,11 @@ const WorldMap: React.FC<WorldMapProps> = ({
           <span className="text-orange-400 text-xs font-semibold">🔗 수입 의존도</span>
         </div>
       )}
+      {mapMode === 'security' && (
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-blue-500/20 border border-blue-500/40 rounded-lg px-2 py-1">
+          <span className="text-blue-400 text-xs font-semibold">🛡️ 에너지 안보</span>
+        </div>
+      )}
 
       <ComposableMap
         projectionConfig={continentInfo.projectionConfig}
@@ -255,8 +260,8 @@ const WorldMap: React.FC<WorldMapProps> = ({
               const isInContinent = !highlightedIds || (alpha2 ? highlightedIds.has(alpha2) : false);
 
               let fillColor: string;
-              if (mapMode === 'import') {
-                // 수입 의존도 모드
+              if (mapMode === 'import' || mapMode === 'security') {
+                // 수입 의존도 / 에너지 안보 모드
                 fillColor = alpha2 ? getImportColor(alpha2) : '#334155';
                 if (!isInContinent) fillColor = '#1e293b';
               } else {
@@ -304,6 +309,61 @@ const WorldMap: React.FC<WorldMapProps> = ({
           }
         </Geographies>
 
+
+        {/* 주요 국가 가격변화율 오버레이 마커 */}
+        {mapMode === 'price' && (() => {
+          // 지도에 표시할 주요 국가 좌표 (가격변화율 라벨)
+          const LABEL_COUNTRIES: { id: string; coords: [number, number] }[] = [
+            { id: 'KR', coords: [127.7, 35.9] },
+            { id: 'JP', coords: [138.3, 36.2] },
+            { id: 'CN', coords: [104.2, 35.9] },
+            { id: 'IN', coords: [78.9, 20.6] },
+            { id: 'US', coords: [-98.4, 39.5] },
+            { id: 'DE', coords: [10.5, 51.2] },
+            { id: 'GB', coords: [-3.4, 55.4] },
+            { id: 'FR', coords: [2.2, 46.2] },
+            { id: 'RU', coords: [90.0, 61.5] },
+            { id: 'SA', coords: [45.0, 24.0] },
+            { id: 'IR', coords: [53.7, 32.4] },
+            { id: 'AU', coords: [133.8, -25.3] },
+            { id: 'BR', coords: [-51.9, -14.2] },
+            { id: 'CA', coords: [-96.8, 56.1] },
+            { id: 'AE', coords: [54.4, 24.5] },
+          ];
+          return LABEL_COUNTRIES.map(({ id, coords }) => {
+            const country = countries.find(c => c.id === id);
+            if (!country) return null;
+            const delta = countryChangeRate(country, activeCategory);
+            if (delta === null) return null;
+            const isHighlighted = !highlightedIds || highlightedIds.has(id);
+            if (!isHighlighted) return null;
+            const sign = delta >= 0 ? '+' : '';
+            const color = delta < 0 ? '#4ade80' : delta < 10 ? '#fbbf24' : delta < 20 ? '#f97316' : '#ef4444';
+            const bgColor = delta < 0 ? 'rgba(34,197,94,0.18)' : delta < 10 ? 'rgba(251,191,36,0.18)' : delta < 20 ? 'rgba(249,115,22,0.18)' : 'rgba(239,68,68,0.18)';
+            return (
+              <Marker key={id} coordinates={coords}>
+                <g style={{ pointerEvents: 'none' }}>
+                  <rect
+                    x={-18} y={-9}
+                    width={36} height={18}
+                    rx={4}
+                    fill={bgColor}
+                    stroke={color}
+                    strokeWidth={0.8}
+                    opacity={0.92}
+                  />
+                  <text
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    style={{ fontSize: '8.5px', fontWeight: 700, fill: color, fontFamily: 'monospace', letterSpacing: '-0.3px' }}
+                  >
+                    {sign}{delta.toFixed(1)}%
+                  </text>
+                </g>
+              </Marker>
+            );
+          });
+        })()}
 
         {/* 한국 고정 ★ 핀 */}
         <Marker coordinates={KOREA_COORDINATES}>

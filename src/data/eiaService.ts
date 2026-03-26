@@ -8,6 +8,33 @@
  * 3. 하드코딩 폴백
  */
 
+import { z } from 'zod';
+
+// ── Zod 검증 스키마 ────────────────────────────────────────────
+const LiveDataSchema = z.object({
+  updatedAt: z.string(),
+  updatedAtKST: z.string(),
+  warDay: z.number().optional(),
+  warSummary: z.string().default(''),
+  marketPrices: z.object({
+    brent:      z.object({ price: z.number(), change: z.number(), unit: z.string(), nameKo: z.string(), source: z.string() }),
+    wti:        z.object({ price: z.number(), change: z.number(), unit: z.string(), nameKo: z.string(), source: z.string() }),
+    naturalGas: z.object({ price: z.number(), change: z.number(), unit: z.string(), nameKo: z.string(), source: z.string() }),
+  }),
+  warNews: z.array(z.object({
+    title: z.string(),
+    description: z.string(),
+    link: z.string(),
+    pubDate: z.string(),
+    source: z.string(),
+  })).default([]),
+  warStartDate: z.string().optional(),
+  briefing: z.any().optional(),
+  trumpPosts: z.array(z.any()).optional(),
+  energyMatrix: z.any().optional(),
+  countryPrices: z.any().optional(),
+}).passthrough();
+
 export interface MarketPrice {
   symbol?: string;
   nameKo: string;
@@ -49,6 +76,8 @@ export interface BriefingEconomy {
 }
 
 export interface WarBriefing {
+  keyAssassinations?: string[];
+  timeline?: Array<{date: string; event: string; type: string}>;
   title: string;
   dayLabel: string;
   operationName: string;
@@ -127,7 +156,12 @@ async function fetchAgentLiveData(): Promise<LiveData | null> {
     });
     if (!res.ok) return null;
     const data: LiveData = await res.json();
-    return data;
+    const validated = LiveDataSchema.safeParse(data);
+    if (!validated.success) {
+      console.warn('[FlameMap] live-data.json validation failed:', validated.error.issues.slice(0, 3));
+      return null;
+    }
+    return validated.data as LiveData;
   } catch {
     return null;
   }
@@ -197,4 +231,33 @@ export async function fetchWarNews(): Promise<{ news: WarNewsItem[]; summary: st
 // ── 전체 LiveData 반환 (컴포넌트용) ─────────────────────────────
 export async function fetchLiveData(): Promise<LiveData | null> {
   return fetchAgentLiveData();
+}
+
+
+// ── GlobalPetrolPrices.com 에너지 DB ─────────────────────────────
+export interface EnergyDB {
+  _meta: {
+    source: string; reference_date: string; collected_at: string;
+    usd_krw: number; usd_krw_date: string;
+    world_avg: Record<string, number>;
+  };
+  snapshots: Record<string, Record<string, Record<string, number>>>;
+  country_snapshots: Record<string, Record<string, Record<string, number>>>;
+}
+let _energyDBCache: EnergyDB | null = null;
+
+export async function fetchEnergyDatabase(): Promise<EnergyDB | null> {
+  if (_energyDBCache) return _energyDBCache;
+  try {
+    const res = await fetch('/energy_database.json', { cache: 'no-cache', signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return null;
+    _energyDBCache = await res.json();
+    return _energyDBCache;
+  } catch { return null; }
+}
+
+/** 환율 실데이터 (USD/KRW) — energy_database.json 우선, 폴백 1504 */
+export async function getUsdKrw(): Promise<number> {
+  const db = await fetchEnergyDatabase();
+  return db?._meta?.usd_krw ?? 1504.17;
 }

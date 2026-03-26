@@ -3,6 +3,8 @@ export type EnergyType = 'gasoline' | 'diesel' | 'lng' | 'elec_residential' | 'e
 export interface PriceHistory {
   date: string;
   price: number;
+  /** true이면 GlobalPetrolPrices.com 실측값, false/undefined이면 보간값 */
+  isReal?: boolean;
 }
 
 export interface EnergyPrice {

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Country, EnergyType, CategoryInfo } from '../data/types';
 import { countryChangeRate, getFlagEmoji, formatPrice } from '../data/utils';
+import { SHARE_BASE_URL } from '../data/constants';
 
 // ── Props ─────────────────────────────────────────────────────
 
@@ -15,7 +16,7 @@ interface ShareCardProps {
 
 // ── 헬퍼 ──────────────────────────────────────────────────────
 
-const SHARE_URL = 'https://fuel-war-map.app'; // 배포 시 실제 URL로 교체
+const SHARE_URL = SHARE_BASE_URL;
 
 function buildShareText(
   country: Country,

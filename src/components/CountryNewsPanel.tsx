@@ -240,11 +240,8 @@ const CountryNewsPanel: React.FC<CountryNewsPanelProps> = ({ countryId, countryN
         )}
 
         {!loading && !error && news.map((item, idx) => (
-          <a
+          <div
             key={idx}
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
             className="block px-3 py-2.5 hover:bg-slate-700/40 transition-colors group"
           >
             {/* 제목 (2줄 클램프) */}
@@ -260,31 +257,50 @@ const CountryNewsPanel: React.FC<CountryNewsPanelProps> = ({ countryId, countryN
               {item.title}
             </p>
 
-            {/* 설명 (1줄) */}
+            {/* 설명 (1줄) + 자동요약 배지 */}
             {item.description && (
-              <p
-                className="text-[10px] text-slate-500 mt-0.5 leading-snug"
-                style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                }}
-              >
-                {item.description}
-              </p>
+              <div className="flex items-start gap-1.5 mt-0.5">
+                <span className="flex-shrink-0 text-[9px] px-1.5 py-0.5 rounded bg-blue-900/40 text-blue-400 border border-blue-700/40 font-medium leading-tight mt-0.5">
+                  자동요약
+                </span>
+                <p
+                  className="text-[10px] text-slate-500 leading-snug"
+                  style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 1,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {item.description}
+                </p>
+              </div>
             )}
 
-            {/* 출처 + 날짜 */}
+            {/* 출처 + 날짜 + 링크 */}
             <div className="flex items-center gap-1.5 mt-1">
               <span className="text-[10px] text-blue-400/80">{item.source}</span>
               <span className="text-[10px] text-slate-600">·</span>
               <span className="text-[10px] text-slate-600">{formatDate(item.pubDate)}</span>
+              {item.link && (
+                <>
+                  <span className="text-[10px] text-slate-600">·</span>
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    출처 ↗
+                  </a>
+                </>
+              )}
               <span className="ml-auto text-[10px] text-slate-600 group-hover:text-slate-400 transition-colors">
-                ↗
+                {item.link ? '' : ''}
               </span>
             </div>
-          </a>
+          </div>
         ))}
       </div>
     </div>

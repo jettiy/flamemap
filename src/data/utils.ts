@@ -1,7 +1,9 @@
 import { Country, EnergyType } from './types';
+import { WAR_START_DATE, USD_TO_KRW_DEFAULT } from './constants';
 
-export const WAR_START_DATE = '2026-01-20';
-export const USD_TO_KRW = 1365;
+// 하위 호환성 — 외부에서 WAR_START_DATE / USD_TO_KRW 직접 import하던 곳 대응
+export { WAR_START_DATE } from './constants';
+export const USD_TO_KRW = USD_TO_KRW_DEFAULT;
 
 /** ISO Alpha-2 → 유니코드 국기 이모지 */
 export const getFlagEmoji = (iso2: string): string =>

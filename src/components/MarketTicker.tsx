@@ -1,12 +1,13 @@
 /**
  * MarketTicker.tsx
  * 실시간 글로벌 원자재 가격 티커 바
+ * - fetchLiveData()를 1순위로 사용
  * - 5분마다 자동 갱신
- * - source === 'fallback' 이면 "📊 추정" 배지 표시
  */
-
-import React, { useState, useEffect, useCallback } from 'react';
-import { fetchMarketPrices, MarketPrice } from '../data/eiaService';
+// @ts-nocheck
+import React, { useState, useEffect } from 'react';
+import { fetchLiveData, MarketPrice } from '../data/eiaService';
+import DataStatusBadge, { DataStatus } from './DataStatusBadge';
 
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000; // 5분
 
@@ -14,6 +15,12 @@ const SYMBOL_ICON: Record<string, string> = {
   'BZ=F': '🛢️',
   'CL=F': '🛢️',
   'NG=F': '⛽',
+};
+
+const SYMBOL_MAP: Record<string, string> = {
+  'BZ=F': 'brent',
+  'CL=F': 'wti',
+  'NG=F': 'naturalGas',
 };
 
 function formatChange(change: number | null): { text: string; color: string; arrow: string } {
@@ -25,7 +32,7 @@ function formatChange(change: number | null): { text: string; color: string; arr
 }
 
 function TickerItem({ item }: { item: MarketPrice }) {
-  const icon = SYMBOL_ICON[item.symbol] ?? '💰';
+  const icon = SYMBOL_ICON[item.symbol ?? ''] ?? '💰';
   const { text: changeText, color: changeColor, arrow } = formatChange(item.change);
 
   return (
@@ -40,11 +47,7 @@ function TickerItem({ item }: { item: MarketPrice }) {
           {arrow}{changeText}
         </span>
       )}
-      {item.source === 'fallback' && (
-        <span className="text-[10px] text-slate-500 bg-slate-700/60 px-1 py-0.5 rounded leading-none">
-          📊 추정
-        </span>
-      )}
+      <DataStatusBadge status={(item.source as DataStatus) ?? 'unknown'} className="ml-0.5" />
     </div>
   );
 }
@@ -52,27 +55,57 @@ function TickerItem({ item }: { item: MarketPrice }) {
 const MarketTicker: React.FC = () => {
   const [prices, setPrices] = useState<MarketPrice[]>([]);
   const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [error, setError] = useState(false);
-
-  const load = useCallback(async () => {
-    try {
-      const data = await fetchMarketPrices();
-      setPrices(data);
-      setLastUpdated(new Date());
-      setError(false);
-    } catch {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   useEffect(() => {
+    const load = async () => {
+      try {
+        const liveData = await fetchLiveData();
+        if (liveData?.marketPrices) {
+          const mp = liveData.marketPrices;
+          const result: MarketPrice[] = [
+            {
+              symbol: 'BZ=F',
+              nameKo: mp.brent.nameKo,
+              price: mp.brent.price,
+              unit: mp.brent.unit,
+              change: mp.brent.change,
+              timestamp: liveData.updatedAtKST ?? null,
+              source: mp.brent.source as any,
+            },
+            {
+              symbol: 'CL=F',
+              nameKo: mp.wti.nameKo,
+              price: mp.wti.price,
+              unit: mp.wti.unit,
+              change: mp.wti.change,
+              timestamp: liveData.updatedAtKST ?? null,
+              source: mp.wti.source as any,
+            },
+            {
+              symbol: 'NG=F',
+              nameKo: mp.naturalGas.nameKo,
+              price: mp.naturalGas.price,
+              unit: mp.naturalGas.unit,
+              change: mp.naturalGas.change,
+              timestamp: liveData.updatedAtKST ?? null,
+              source: mp.naturalGas.source as any,
+            },
+          ];
+          setPrices(result);
+          setLastUpdated(liveData.updatedAtKST ?? null);
+        }
+      } catch {
+        // silently fail
+      } finally {
+        setLoading(false);
+      }
+    };
+
     load();
-    const timer = setInterval(load, REFRESH_INTERVAL_MS);
-    return () => clearInterval(timer);
-  }, [load]);
+    const id = setInterval(load, REFRESH_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, []);
 
   if (loading) {
     return (
@@ -82,7 +115,7 @@ const MarketTicker: React.FC = () => {
     );
   }
 
-  if (error && prices.length === 0) {
+  if (prices.length === 0) {
     return null;
   }
 
@@ -90,7 +123,6 @@ const MarketTicker: React.FC = () => {
     <div className="flex-shrink-0 bg-slate-900/80 border-b border-slate-800 px-3 py-1.5 flex items-center gap-2 overflow-x-auto scrollbar-none">
       {/* 레이블 */}
       <div className="flex-shrink-0 flex items-center gap-1.5 mr-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
         <span className="text-[10px] text-slate-500 uppercase tracking-wider font-medium whitespace-nowrap">
           원자재
         </span>
@@ -110,7 +142,7 @@ const MarketTicker: React.FC = () => {
       {lastUpdated && (
         <div className="flex-shrink-0 ml-auto hidden sm:flex items-center">
           <span className="text-[10px] text-slate-600 whitespace-nowrap">
-            {lastUpdated.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })} 기준
+            {lastUpdated} 기준
           </span>
         </div>
       )}
