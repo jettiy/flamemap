@@ -170,7 +170,7 @@ async function fetchAgentLiveData(): Promise<LiveData | null> {
 // ── Yahoo Finance 비공식 API ────────────────────────────────────
 async function fetchYahooPrice(symbol: string): Promise<{ price: number; change: number } | null> {
   try {
-    const url = `https://query1.finance.yahoo.com/v8/chart/${symbol}?interval=1d&range=5d`;
+    const url = `/api/yahoo?symbol=${symbol}&range=5d&interval=1d`;
     const res = await fetch(url, {
       signal: AbortSignal.timeout(6000),
       headers: { 'User-Agent': 'Mozilla/5.0' },
