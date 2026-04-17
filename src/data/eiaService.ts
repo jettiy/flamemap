@@ -4,7 +4,7 @@
  *
  * 우선순위:
  * 1. /live-data.json (에이전트가 6시간마다 업데이트하는 파일)
- * 2. Yahoo Finance 비공식 API (CORS 이슈 가능)
+ * 2. 서버 프록시(/api/yahoo)를 통한 시세 데이터
  * 3. 하드코딩 폴백
  */
 
@@ -167,22 +167,20 @@ async function fetchAgentLiveData(): Promise<LiveData | null> {
   }
 }
 
-// ── Yahoo Finance 비공식 API ────────────────────────────────────
+// ── 시세 서버 프록시 ─────────────────────────────────
 async function fetchYahooPrice(symbol: string): Promise<{ price: number; change: number } | null> {
   try {
     const url = `/api/yahoo?symbol=${symbol}&range=5d&interval=1d`;
     const res = await fetch(url, {
       signal: AbortSignal.timeout(6000),
-      headers: { 'User-Agent': 'Mozilla/5.0' },
     });
     if (!res.ok) return null;
     const data = await res.json();
-    const closes: (number | null)[] = data?.chart?.result?.[0]?.indicators?.quote?.[0]?.close ?? [];
-    const valid = closes.filter((c): c is number => c !== null);
-    if (valid.length < 2) return null;
-    const price = Math.round(valid[valid.length - 1] * 100) / 100;
-    const change = Math.round(((valid[valid.length - 1] - valid[valid.length - 2]) / valid[valid.length - 2]) * 10000) / 100;
-    return { price, change };
+    // 프록시가 이미 price/change 파싱해서 반환
+    if (data?.price != null && data?.change != null) {
+      return { price: data.price, change: data.change };
+    }
+    return null;
   } catch {
     return null;
   }
@@ -201,7 +199,7 @@ export async function fetchMarketPrices(): Promise<MarketPrice[]> {
     ];
   }
 
-  // 2순위: Yahoo Finance 직접 fetch
+  // 2순위: 서버 프록시를 통한 시세 데이터
   const symbols = ['BZ=F', 'CL=F', 'NG=F'];
   const names   = ['브렌트유', 'WTI 원유', '천연가스'];
   const units   = ['USD/배럴', 'USD/배럴', 'USD/MMBtu'];

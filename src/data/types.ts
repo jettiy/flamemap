@@ -33,5 +33,5 @@ export interface CategoryInfo {
 }
 
 export type RegionFilter = '전체' | '아시아' | '유럽' | '중동' | '아메리카' | '기타';
-export type MobileTab = 'map' | 'chart' | 'ranking' | 'compare' | 'timeline' | 'briefing';
+export type MobileTab = 'map' | 'chart' | 'ranking' | 'compare' | 'timeline' | 'briefing' | 'newsroom';
 export type RankingSort = 'rise' | 'fall';

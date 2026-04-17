@@ -2,9 +2,7 @@
  * CountryNewsPanel.tsx
  * 선택 국가의 에너지 관련 뉴스를 표시하는 패널
  *
- * 뉴스 소스: rss2json.com (무료, CORS OK)
- *   - Reuters Business: https://feeds.reuters.com/reuters/businessNews
- *   - BBC Business: http://feeds.bbci.co.uk/news/business/rss.xml
+ * 뉴스 소스: 서버 프록시(/api/news)를 통해 RSS 피드 조회
  * 국가명 키워드로 필터링 후 상위 3건 표시
  */
 
@@ -20,7 +18,9 @@ export interface NewsItem {
 }
 
 /* ────────────────────────── 상수 ────────────────────────── */
-const RSS2JSON_BASE = 'https://api.rss2json.com/v1/api.json';
+// 프록시를 통해 rss2json 호출 — API 엔드포인트 숨김
+// feed_id만 전송 → 클라이언트에 외부 RSS URL 노출 없음
+const NEWS_PROXY = '/api/news?feed_id=all&count=30';
 
 /** 국가 ID → 영문 이름 (RSS 필터링 키워드) */
 const COUNTRY_EN_NAME: Record<string, string> = {
@@ -77,27 +77,22 @@ const COUNTRY_EN_NAME: Record<string, string> = {
 /** 에너지 관련 키워드 (general) */
 const ENERGY_KEYWORDS = ['oil', 'energy', 'gas', 'fuel', 'petroleum', 'crude', 'LNG', 'barrel', 'opec'];
 
-/** RSS 피드 목록 */
-const RSS_FEEDS = [
-  { url: 'https://feeds.reuters.com/reuters/businessNews', name: 'Reuters' },
-  { url: 'http://feeds.bbci.co.uk/news/business/rss.xml', name: 'BBC Business' },
-];
-
 /* ────────────────────────── fetch 로직 ────────────────────────── */
 interface RssItem {
   title: string;
   description: string;
   link: string;
   pubDate: string;
+  source: string;
 }
 
-async function fetchRssFeed(rssUrl: string, sourceName: string): Promise<(RssItem & { source: string })[]> {
-  const apiUrl = `${RSS2JSON_BASE}?rss_url=${encodeURIComponent(rssUrl)}&count=30`;
-  const res = await fetch(apiUrl, { signal: AbortSignal.timeout(8000) });
-  if (!res.ok) throw new Error(`rss2json HTTP ${res.status}`);
+// 서버 프록시에서 모든 피드를 한 번에 받아옴 (RSS URL은 서버에서만 관리)
+async function fetchAllFeeds(): Promise<RssItem[]> {
+  const res = await fetch(NEWS_PROXY, { signal: AbortSignal.timeout(10000) });
+  if (!res.ok) throw new Error(`News proxy HTTP ${res.status}`);
   const json = await res.json();
-  if (json.status !== 'ok') throw new Error('rss2json error: ' + json.message);
-  return (json.items ?? []).map((item: RssItem) => ({ ...item, source: sourceName }));
+  if (json.status !== 'ok') throw new Error('News proxy error: ' + (json.error ?? 'unknown'));
+  return json.items ?? [];
 }
 
 /** HTML 태그 제거 */
@@ -121,17 +116,8 @@ function formatDate(dateStr: string): string {
 async function fetchCountryNews(countryId: string): Promise<NewsItem[]> {
   const countryName = COUNTRY_EN_NAME[countryId];
 
-  // 여러 피드를 병렬로 fetch
-  const feedResults = await Promise.allSettled(
-    RSS_FEEDS.map((f) => fetchRssFeed(f.url, f.name))
-  );
-
-  const allItems: (RssItem & { source: string })[] = [];
-  for (const r of feedResults) {
-    if (r.status === 'fulfilled') {
-      allItems.push(...r.value);
-    }
-  }
+  // 서버 프록시에서 모든 피드를 한 번에 fetch
+  const allItems = await fetchAllFeeds();
 
   if (allItems.length === 0) return [];
 

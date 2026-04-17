@@ -22,12 +22,13 @@ import CountryNewsPanel from './components/CountryNewsPanel';
 import DataStatusBadge from './components/DataStatusBadge';
 import ShockSimulator from './components/ShockSimulator';
 import CountrySearch from './components/CountrySearch';
+import NewsRoomPanel from './components/NewsRoomPanel';
 import { fetchLiveData } from './data/eiaService';
 
 /* ══════════════════════════════════════════════════════
    데스크탑 섹션 (비교 탭 제거)
 ══════════════════════════════════════════════════════ */
-type DesktopSection = 'map' | 'chart' | 'ranking' | 'timeline' | 'briefing' | 'simulator';
+type DesktopSection = 'map' | 'chart' | 'ranking' | 'timeline' | 'briefing' | 'newsroom' | 'simulator';
 
 const DESKTOP_SIDEBAR: { id: DesktopSection; label: string; icon: string }[] = [
   { id: 'map',      label: '지도',     icon: '🗺️' },
@@ -35,6 +36,7 @@ const DESKTOP_SIDEBAR: { id: DesktopSection; label: string; icon: string }[] = [
   { id: 'ranking',  label: '랭킹',     icon: '🏆' },
   { id: 'timeline', label: '타임라인', icon: '⚠️' },
   { id: 'briefing', label: '전황',     icon: '📡' },
+  { id: 'newsroom', label: '뉴스룸',   icon: '📰' },
 ];
 
 /* 모바일 탭 (비교 탭 제거) */
@@ -44,6 +46,7 @@ const MOBILE_TABS: { id: MobileTab; label: string; icon: string }[] = [
   { id: 'ranking',  label: '랭킹',   icon: '🏆' },
   { id: 'timeline', label: '타임라인', icon: '⚠️' },
   { id: 'briefing', label: '전황',   icon: '📡' },
+  { id: 'newsroom', label: '뉴스룸', icon: '📰' },
 ];
 
 /* ══════════════════════════════════════════════════════
@@ -383,6 +386,13 @@ function App() {
               </div>
             )}
 
+            {/* 뉴스룸 섹션 */}
+            {desktopSection === 'newsroom' && (
+              <div className={`flex-1 min-h-0 overflow-hidden rounded-xl border ${t.mapBorder}`}>
+                <NewsRoomPanel />
+              </div>
+            )}
+
             {/* 시민레이터 섹션 */}
             {desktopSection === 'simulator' && (
               <div className={`flex-1 min-h-0 overflow-hidden rounded-xl border ${t.mapBorder}`}>
@@ -458,6 +468,12 @@ function App() {
           {mobileTab === 'briefing' && (
             <div className="h-full overflow-hidden">
               <WarBriefingPanel />
+            </div>
+          )}
+
+          {mobileTab === 'newsroom' && (
+            <div className="h-full overflow-hidden">
+              <NewsRoomPanel />
             </div>
           )}
         </div>
